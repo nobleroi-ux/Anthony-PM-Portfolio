@@ -75,13 +75,14 @@
     color: var(--text-muted);
     text-decoration: none;
     transition: color 0.2s;
+    cursor: pointer;
   }
 
   .nav-links a:hover {
     color: var(--accent);
   }
 
-  .nav-hire {
+  .nav-link-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -92,9 +93,10 @@
     font-weight: 600 !important;
     border-radius: 6px;
     transition: background 0.2s, transform 0.2s;
+    cursor: pointer;
   }
 
-  .nav-hire:hover {
+  .nav-link-btn:hover {
     background: var(--accent-hover);
     transform: translateY(-1px);
   }
@@ -261,17 +263,62 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   }
 
-  /* SECTIONS */
-  section {
-    padding: 80px 48px;
+  /* TABS CONTAINER */
+  .tabs-section {
     max-width: 1400px;
-    margin: auto;
+    margin: 0 auto;
+    padding: 0 48px 80px;
   }
 
-  .section-header {
-    margin-bottom: 56px;
+  .tabs-header {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    overflow-x: auto;
   }
 
+  .tab-button {
+    padding: 16px 24px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .tab-button:hover {
+    color: var(--accent);
+  }
+
+  .tab-button.active {
+    color: var(--accent);
+  }
+
+  .tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* CV / ABOUT SECTION */
   .section-label {
     font-size: 12px;
     font-weight: 700;
@@ -287,16 +334,10 @@
     font-weight: 700;
     line-height: 1.2;
     color: var(--text);
-    margin-bottom: 8px;
+    margin-bottom: 32px;
   }
 
-  .section-desc {
-    font-size: 16px;
-    color: var(--text-secondary);
-    max-width: 600px;
-  }
-
-  /* ABOUT SECTION */
+  /* ABOUT GRID */
   .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -738,11 +779,6 @@
     color: var(--success);
   }
 
-  .cert-status.pending {
-    background: rgba(245, 158, 11, 0.1);
-    color: var(--warning);
-  }
-
   /* SKILLS */
   .skills-section {
     background: var(--surface);
@@ -789,21 +825,23 @@
     flex-shrink: 0;
   }
 
-  /* CONTACT */
-  .contact-wrapper {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 48px;
+  /* CONTACT SECTION */
+  .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
-    align-items: start;
+  }
+
+  .contact-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
   }
 
   .contact-headline {
     font-family: 'Playfair Display', serif;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     line-height: 1.2;
     margin-bottom: 16px;
@@ -977,6 +1015,11 @@
     50% { opacity: 0.5; transform: scale(1.2); }
   }
 
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
   .reveal {
     opacity: 0;
     transform: translateY(20px);
@@ -1019,24 +1062,20 @@
       grid-template-columns: 1fr;
     }
 
-    section {
-      padding: 60px 24px;
+    .tabs-section {
+      padding: 0 24px 60px;
     }
 
     .about-grid,
     .projects-grid,
     .certs-grid,
-    .skills-categories {
+    .skills-categories,
+    .contact-grid {
       grid-template-columns: 1fr;
     }
 
     .impact-grid {
       grid-template-columns: 1fr;
-    }
-
-    .contact-wrapper {
-      grid-template-columns: 1fr;
-      gap: 32px;
     }
 
     .timeline-item {
@@ -1060,12 +1099,11 @@
   <nav>
     <div class="nav-logo">Dr. A. Osakwe</div>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#impact">Impact</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#certifications">Certifications</a></li>
-      <li><a href="#contact" class="nav-hire">Contact Me</a></li>
+      <li><a onclick="showTab('overview')">Overview</a></li>
+      <li><a onclick="showTab('cv')">CV</a></li>
+      <li><a onclick="showTab('projects')">Projects</a></li>
+      <li><a onclick="showTab('skills')">Skills</a></li>
+      <li><a onclick="showTab('contact')" class="nav-link-btn">Get in Touch</a></li>
     </ul>
   </nav>
 
@@ -1084,8 +1122,8 @@
           Medical Doctor (MBBS) with 10+ years bridging clinical medicine, public health systems, and digital health product development. Building tools that transform how healthcare systems operate.
         </p>
         <div class="hero-cta">
-          <a href="#projects" class="btn btn-primary">View Work</a>
-          <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+          <a onclick="showTab('projects')" class="btn btn-primary" style="cursor: pointer;">View Work</a>
+          <a onclick="showTab('contact')" class="btn btn-secondary" style="cursor: pointer;">Get in Touch</a>
         </div>
 
         <div class="hero-stats">
@@ -1114,396 +1152,420 @@
     </div>
   </div>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="section-header reveal">
-      <div class="section-label">Background</div>
-      <h2 class="section-title">Clinical Expertise Meets <span class="accent">Product Strategy</span></h2>
+  <!-- TABS SECTION -->
+  <div class="tabs-section">
+
+    <!-- TAB NAVIGATION -->
+    <div class="tabs-header">
+      <button class="tab-button active" onclick="showTab('overview')">Overview</button>
+      <button class="tab-button" onclick="showTab('cv')">CV & Experience</button>
+      <button class="tab-button" onclick="showTab('projects')">Projects</button>
+      <button class="tab-button" onclick="showTab('skills')">Skills & Certs</button>
+      <button class="tab-button" onclick="showTab('contact')">Contact</button>
     </div>
-    <div class="about-grid reveal">
-      <div class="about-text">
-        <p>I am a Nigerian-trained Medical Doctor with over <strong>ten years of experience</strong> across clinical medicine, public health programming, and project management — now channeling that deep operational knowledge into building better health products.</p>
-        <p>My clinical career has been shaped by working in <strong>resource-constrained, high-stakes environments</strong> where solving real problems fast is not optional. That instinct — identifying what matters, building fast, and measuring impact — is the foundation of how I approach product work.</p>
-        <p>I hold a <strong>Masters in International Public Health</strong> (in progress) and have completed advanced training in <strong>Leadership & Management in Health</strong> from the University of Washington.</p>
-        <p>My transition into Product Management is not a departure from medicine. It is the <strong>most direct path</strong> to solving the health system problems I've spent a decade watching happen.</p>
-      </div>
-      <div class="credentials">
-        <div class="cred-item">
-          <div class="cred-icon">🩺</div>
-          <div class="cred-content">
-            <div class="cred-title">MBBS — University of Lagos</div>
-            <div class="cred-sub">College of Medicine · June 2015</div>
+
+    <!-- TAB 1: OVERVIEW -->
+    <div id="overview" class="tab-content active">
+      <section>
+        <div class="reveal">
+          <div class="section-label">Background</div>
+          <h2 class="section-title">Clinical Expertise Meets <span class="accent">Product Strategy</span></h2>
+        </div>
+        <div class="about-grid reveal">
+          <div class="about-text">
+            <p>I am a Nigerian-trained Medical Doctor with over <strong>ten years of experience</strong> across clinical medicine, public health programming, and project management — now channeling that deep operational knowledge into building better health products.</p>
+            <p>My clinical career has been shaped by working in <strong>resource-constrained, high-stakes environments</strong> where solving real problems fast is not optional. That instinct — identifying what matters, building fast, and measuring impact — is the foundation of how I approach product work.</p>
+            <p>I hold a <strong>Masters in International Public Health</strong> (in progress) and have completed advanced training in <strong>Leadership & Management in Health</strong> from the University of Washington.</p>
+            <p>My transition into Product Management is not a departure from medicine. It is the <strong>most direct path</strong> to solving the health system problems I've spent a decade watching happen.</p>
+          </div>
+          <div class="credentials">
+            <div class="cred-item">
+              <div class="cred-icon">🩺</div>
+              <div class="cred-content">
+                <div class="cred-title">MBBS — University of Lagos</div>
+                <div class="cred-sub">College of Medicine · June 2015</div>
+              </div>
+            </div>
+            <div class="cred-item">
+              <div class="cred-icon">📋</div>
+              <div class="cred-content">
+                <div class="cred-title">Certified Lead PM Professional</div>
+                <div class="cred-sub">IIPM Abuja · August 2021</div>
+              </div>
+            </div>
+            <div class="cred-item">
+              <div class="cred-icon">🎓</div>
+              <div class="cred-content">
+                <div class="cred-title">Masters in International Public Health</div>
+                <div class="cred-sub">EUCLID University, USA · 2021 – Ongoing</div>
+              </div>
+            </div>
+            <div class="cred-item">
+              <div class="cred-icon">🏥</div>
+              <div class="cred-content">
+                <div class="cred-title">MDCN Annual Practicing License</div>
+                <div class="cred-sub">Medical & Dental Council of Nigeria · Valid 2026</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="cred-item">
-          <div class="cred-icon">📋</div>
-          <div class="cred-content">
-            <div class="cred-title">Certified Lead PM Professional</div>
-            <div class="cred-sub">IIPM Abuja · August 2021</div>
+      </section>
+
+      <section>
+        <div class="reveal">
+          <div class="section-label">Measured Outcomes</div>
+          <h2 class="section-title">Results That <span class="accent">Matter</span></h2>
+        </div>
+        <div class="impact-grid reveal">
+          <div class="impact-card">
+            <div class="impact-icon">📈</div>
+            <div class="impact-num">133%</div>
+            <div class="impact-label">Performance Improvement</div>
+            <div class="impact-desc">Drove biometric capture performance from 30% → 70% across HIV programme sites in 4 months using data analysis and workflow redesign.</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-icon">🎯</div>
+            <div class="impact-num">98%+</div>
+            <div class="impact-label">Client Retention</div>
+            <div class="impact-desc">Sustained USAID-benchmarked retention through proactive tracking and structured client engagement frameworks.</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-icon">⏱️</div>
+            <div class="impact-num">1,500+</div>
+            <div class="impact-label">Clinical Hours</div>
+            <div class="impact-desc">Hands-on ultrasound and surgical practice in resource-limited environments — building the operational instinct behind every product.</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-icon">🏛️</div>
+            <div class="impact-num">2</div>
+            <div class="impact-label">National Contributions</div>
+            <div class="impact-desc">Helped shape Nigeria's National PrEP Tool and AHD Intervention Roll-out at the federal level (NASCP/FMOH).</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-icon">🚀</div>
+            <div class="impact-num">2+</div>
+            <div class="impact-label">Products Shipped</div>
+            <div class="impact-desc">From clinical insight to live MVP — MedOpsLov and MedOps Command, both addressing real workflow gaps.</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-icon">👥</div>
+            <div class="impact-num">5+</div>
+            <div class="impact-label">Departments Led</div>
+            <div class="impact-desc">GOPD, A&E, ANC, OBGYN, and Paediatric OPD — cross-functional clinical management at scale.</div>
           </div>
         </div>
-        <div class="cred-item">
-          <div class="cred-icon">🎓</div>
-          <div class="cred-content">
-            <div class="cred-title">Masters in International Public Health</div>
-            <div class="cred-sub">EUCLID University, USA · 2021 – Ongoing</div>
+      </section>
+    </div>
+
+    <!-- TAB 2: CV & EXPERIENCE -->
+    <div id="cv" class="tab-content">
+      <section>
+        <div class="reveal">
+          <div class="section-label">Career Timeline</div>
+          <h2 class="section-title">The Path That Built My <span class="accent">Product Instincts</span></h2>
+        </div>
+        <div class="timeline reveal">
+
+          <div class="timeline-item">
+            <div class="tl-date">2024 — Present</div>
+            <div class="tl-content">
+              <div class="tl-role">Medical Officer <span class="role-tag clinical">Clinical</span></div>
+              <div class="tl-org">Muhammed Buhari Police Hospital · Abuja</div>
+              <ul class="tl-points">
+                <li>Managing multi-department <strong>outpatient and inpatient workflows</strong> unsupervised across GOPD, A&E, ANC, OBGYN, and Paediatric OPD.</li>
+                <li>Designed and submitted a <strong>Solar Electrification Proposal</strong> to the Rural Electrification Agency — demonstrating end-to-end project ideation and execution.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="tl-date">2021 — 2022</div>
+            <div class="tl-content">
+              <div class="tl-role">Lead Clinician & Clinical Quality Focal <span class="role-tag quality">Quality & Data</span></div>
+              <div class="tl-org">Heartland Alliance LTD/GTE · Lagos (USAID-funded)</div>
+              <ul class="tl-points">
+                <li>Used <strong>data analysis</strong> to drive biometric capture performance from <strong>30% → 70%</strong> in 4 months — a 133% improvement.</li>
+                <li>Maintained <strong>98%+ ART Client Retention</strong> benchmarked by USAID through strategic scheduling and engagement frameworks.</li>
+                <li>Contributed to <strong>Nigeria's National PrEP Tool</strong> development through technical working groups at the federal level.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="tl-date">2019 — 2021</div>
+            <div class="tl-content">
+              <div class="tl-role">Zonal CART Clinician <span class="role-tag clinical">Programme</span></div>
+              <div class="tl-org">Heartland Alliance LTD/GTE · Lagos</div>
+              <ul class="tl-points">
+                <li>Designed <strong>innovative operational strategies</strong> that improved ART Retention and eHR adoption across two zones.</li>
+                <li>Developed <strong>SOPs and clinical guidelines</strong> aligned with national and international best practices.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="tl-date">2018 — 2019</div>
+            <div class="tl-content">
+              <div class="tl-role">Resident Medical Officer <span class="role-tag clinical">Clinical</span></div>
+              <div class="tl-org">St. Peter's Catholic Church Hospital · Abaji, FCT</div>
+              <ul class="tl-points">
+                <li>Performed <strong>1,500+ hours</strong> of clinical ultrasound and surgical procedures in resource-limited environments.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="tl-date">2016 — 2017</div>
+            <div class="tl-content">
+              <div class="tl-role">Chief Medical House-Officer <span class="role-tag leadership">Leadership</span></div>
+              <div class="tl-org">Kubwa General Hospital · Abuja</div>
+              <ul class="tl-points">
+                <li>Coordinated hospital-wide doctor rosters, CME planning, and cross-functional team coordination at scale.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 3: PROJECTS -->
+    <div id="projects" class="tab-content">
+      <section>
+        <div class="reveal">
+          <div class="section-label">Selected Work</div>
+          <h2 class="section-title">Case Studies: Insight to <span class="accent">Outcome</span></h2>
+        </div>
+        <div class="projects-grid">
+
+          <div class="project-card reveal">
+            <div class="project-header">
+              <div class="project-icon">📚</div>
+              <a href="#" class="project-link" title="View Project">↗</a>
+            </div>
+            <div>
+              <div class="project-name">MedOpsLov</div>
+              <p class="project-problem"><strong>Problem:</strong> Medical professionals lack structured systems for intensive study and certification preparation.</p>
+            </div>
+            <div class="project-features">
+              <div class="feature-row">Structured study modules with adaptive flow</div>
+              <div class="feature-row">Real-time progress tracking dashboard</div>
+              <div class="feature-row">Optimized reading & retention workflows</div>
+            </div>
+            <div class="project-metrics">
+              <div class="metric-box">
+                <div class="metric-val">60%+</div>
+                <div class="metric-label">Weekly Retention</div>
+              </div>
+              <div class="metric-box">
+                <div class="metric-val">70%+</div>
+                <div class="metric-label">Completion Rate</div>
+              </div>
+            </div>
+            <div class="project-tags">
+              <span class="tag">HealthTech</span>
+              <span class="tag">Product Strategy</span>
+              <span class="tag">MVP</span>
+            </div>
+          </div>
+
+          <div class="project-card reveal">
+            <div class="project-header">
+              <div class="project-icon">⚙️</div>
+              <a href="#" class="project-link" title="View Project">↗</a>
+            </div>
+            <div>
+              <div class="project-name">MedOps Command</div>
+              <p class="project-problem"><strong>Problem:</strong> No centralized system exists for managing medical operations and workflow execution in clinical environments.</p>
+            </div>
+            <div class="project-features">
+              <div class="feature-row">Centralized operational workflow management</div>
+              <div class="feature-row">Structured planning & execution system</div>
+              <div class="feature-row">Built from 10 years of clinical operational insight</div>
+            </div>
+            <div class="project-metrics">
+              <div class="metric-box">
+                <div class="metric-val">65%+</div>
+                <div class="metric-label">Engagement Rate</div>
+              </div>
+              <div class="metric-box">
+                <div class="metric-val">75%+</div>
+                <div class="metric-label">Task Completion</div>
+              </div>
+            </div>
+            <div class="project-tags">
+              <span class="tag">Digital Health</span>
+              <span class="tag">Operations</span>
+              <span class="tag">Systems Design</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 4: SKILLS & CERTIFICATIONS -->
+    <div id="skills" class="tab-content">
+      <section>
+        <div class="reveal">
+          <div class="section-label">Expertise</div>
+          <h2 class="section-title">Core <span class="accent">Competencies</span></h2>
+        </div>
+        <div class="skills-section reveal">
+          <div class="skills-categories">
+            <div>
+              <div class="skill-category-title">Product & Strategy</div>
+              <div class="skill-list">
+                <div class="skill-item">Product Strategy & Roadmapping</div>
+                <div class="skill-item">MVP Development & Launch</div>
+                <div class="skill-item">User Research & Needs Analysis</div>
+                <div class="skill-item">Agile & Scrum Methodology</div>
+              </div>
+            </div>
+            <div>
+              <div class="skill-category-title">Health Systems</div>
+              <div class="skill-list">
+                <div class="skill-item">Health Systems Design</div>
+                <div class="skill-item">Clinical Workflow Analysis</div>
+                <div class="skill-item">Global Health Programming</div>
+                <div class="skill-item">Health Policy & Advocacy</div>
+              </div>
+            </div>
+            <div>
+              <div class="skill-category-title">Data & Execution</div>
+              <div class="skill-list">
+                <div class="skill-item">Project Management (CLPMP)</div>
+                <div class="skill-item">Data Analysis & Visualization</div>
+                <div class="skill-item">Monitoring & Evaluation</div>
+                <div class="skill-item">Stakeholder Management</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="cred-item">
-          <div class="cred-icon">🏥</div>
-          <div class="cred-content">
-            <div class="cred-title">MDCN Annual Practicing License</div>
-            <div class="cred-sub">Medical & Dental Council of Nigeria · Valid 2026</div>
+      </section>
+
+      <section>
+        <div class="reveal">
+          <div class="section-label">Credentials</div>
+          <h2 class="section-title">Certifications & <span class="accent">Training</span></h2>
+        </div>
+        <div class="certs-grid reveal">
+
+          <div class="cert-card">
+            <div class="cert-badge">🏆</div>
+            <div class="cert-issuer">IIPM · Abuja</div>
+            <div class="cert-name">Certified Lead Project Management Professional</div>
+            <div class="cert-year">August 2021 · 35 PDUs</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">🎓</div>
+            <div class="cert-issuer">University of Washington</div>
+            <div class="cert-name">Leadership & Management in Health</div>
+            <div class="cert-year">June 2021 · 7.5 CEUs</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">🎓</div>
+            <div class="cert-issuer">University of Washington</div>
+            <div class="cert-name">Project Management in Global Health</div>
+            <div class="cert-year">September 2021 · 7.5 CEUs</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">📊</div>
+            <div class="cert-issuer">Oze Business School</div>
+            <div class="cert-name">Business Analytics Fundamentals</div>
+            <div class="cert-year">February 2025</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">❤️</div>
+            <div class="cert-issuer">NHCPS · SaveALife</div>
+            <div class="cert-name">ACLS & PALS Provider Certification</div>
+            <div class="cert-year">Issued January 2024 · Renews January 2026</div>
+            <div class="cert-status valid">✓ Active</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">🌐</div>
+            <div class="cert-issuer">NextGenU · USAID</div>
+            <div class="cert-name">Global Health Informatics</div>
+            <div class="cert-year">December 2021</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">📈</div>
+            <div class="cert-issuer">USAID Global Health</div>
+            <div class="cert-name">M&E Fundamentals & Health Communication</div>
+            <div class="cert-year">2023</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">🎯</div>
+            <div class="cert-issuer">IIPM · Abuja</div>
+            <div class="cert-name">Strategic Planning Workshop</div>
+            <div class="cert-year">January 2022</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-badge">🏥</div>
+            <div class="cert-issuer">MDCN</div>
+            <div class="cert-name">Annual Practicing License</div>
+            <div class="cert-year">Valid through 2026</div>
+            <div class="cert-status valid">✓ Current</div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 5: CONTACT -->
+    <div id="contact" class="tab-content">
+      <section>
+        <div class="reveal">
+          <div class="section-label">Connect</div>
+          <h2 class="section-title">Let's Build <span class="accent">Better Health Products</span></h2>
+        </div>
+        <div class="contact-grid reveal">
+          <div class="contact-card">
+            <h3 class="contact-headline">Open to <span class="accent">Opportunities</span></h3>
+            <p class="contact-sub">Whether you're building health infrastructure, looking for a clinical product perspective, or exploring digital health initiatives — I'd love to connect and discuss how we can create meaningful impact together.</p>
+            <div class="contact-links">
+              <a href="mailto:osakweonyemaanthony@gmail.com" class="contact-link">
+                <span>✉️</span> osakweonyemaanthony@gmail.com
+              </a>
+              <a href="https://www.linkedin.com/in/drosakweanthony" target="_blank" class="contact-link">
+                <span>💼</span> linkedin.com/in/drosakweanthony
+              </a>
+              <a href="#" class="contact-link">
+                <span>📍</span> Abuja, Nigeria
+              </a>
+            </div>
+          </div>
+          <div class="contact-card">
+            <form class="contact-form" id="contact-form" onsubmit="return handleContactSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="cf-name">Your Name</label>
+                <input class="form-input" type="text" id="cf-name" name="name" placeholder="e.g., Dr. Jane Smith" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cf-email">Email Address</label>
+                <input class="form-input" type="email" id="cf-email" name="email" placeholder="you@company.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cf-message">Message</label>
+                <textarea class="form-textarea" id="cf-message" name="message" placeholder="Tell me about the opportunity..." required></textarea>
+              </div>
+              <button type="submit" class="form-submit">Send Message →</button>
+              <div class="form-success" id="form-success">✓ Message sent successfully. I'll be in touch soon!</div>
+            </form>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-  </section>
 
-  <!-- IMPACT -->
-  <section id="impact">
-    <div class="section-header reveal">
-      <div class="section-label">Measured Outcomes</div>
-      <h2 class="section-title">Results That <span class="accent">Matter</span></h2>
-    </div>
-    <div class="impact-grid reveal">
-      <div class="impact-card">
-        <div class="impact-icon">📈</div>
-        <div class="impact-num">133%</div>
-        <div class="impact-label">Performance Improvement</div>
-        <div class="impact-desc">Drove biometric capture performance from 30% → 70% across HIV programme sites in 4 months using data analysis and workflow redesign.</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-icon">🎯</div>
-        <div class="impact-num">98%+</div>
-        <div class="impact-label">Client Retention</div>
-        <div class="impact-desc">Sustained USAID-benchmarked retention through proactive tracking and structured client engagement frameworks.</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-icon">⏱️</div>
-        <div class="impact-num">1,500+</div>
-        <div class="impact-label">Clinical Hours</div>
-        <div class="impact-desc">Hands-on ultrasound and surgical practice in resource-limited environments — building the operational instinct behind every product.</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-icon">🏛️</div>
-        <div class="impact-num">2</div>
-        <div class="impact-label">National Contributions</div>
-        <div class="impact-desc">Helped shape Nigeria's National PrEP Tool and AHD Intervention Roll-out at the federal level (NASCP/FMOH).</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-icon">🚀</div>
-        <div class="impact-num">2+</div>
-        <div class="impact-label">Products Shipped</div>
-        <div class="impact-desc">From clinical insight to live MVP — MedOpsLov and MedOps Command, both addressing real workflow gaps.</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-icon">👥</div>
-        <div class="impact-num">5+</div>
-        <div class="impact-label">Departments Led</div>
-        <div class="impact-desc">GOPD, A&E, ANC, OBGYN, and Paediatric OPD — cross-functional clinical management at scale.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <section id="experience">
-    <div class="section-header reveal">
-      <div class="section-label">Career Timeline</div>
-      <h2 class="section-title">The Path That Built My <span class="accent">Product Instincts</span></h2>
-    </div>
-    <div class="timeline reveal">
-
-      <div class="timeline-item">
-        <div class="tl-date">2024 — Present</div>
-        <div class="tl-content">
-          <div class="tl-role">Medical Officer <span class="role-tag clinical">Clinical</span></div>
-          <div class="tl-org">Muhammed Buhari Police Hospital · Abuja</div>
-          <ul class="tl-points">
-            <li>Managing multi-department <strong>outpatient and inpatient workflows</strong> unsupervised across GOPD, A&E, ANC, OBGYN, and Paediatric OPD.</li>
-            <li>Designed and submitted a <strong>Solar Electrification Proposal</strong> to the Rural Electrification Agency — demonstrating end-to-end project ideation and execution.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="tl-date">2021 — 2022</div>
-        <div class="tl-content">
-          <div class="tl-role">Lead Clinician & Clinical Quality Focal <span class="role-tag quality">Quality & Data</span></div>
-          <div class="tl-org">Heartland Alliance LTD/GTE · Lagos (USAID-funded)</div>
-          <ul class="tl-points">
-            <li>Used <strong>data analysis</strong> to drive biometric capture performance from <strong>30% → 70%</strong> in 4 months — a 133% improvement.</li>
-            <li>Maintained <strong>98%+ ART Client Retention</strong> benchmarked by USAID through strategic scheduling and engagement frameworks.</li>
-            <li>Contributed to <strong>Nigeria's National PrEP Tool</strong> development through technical working groups at the federal level.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="tl-date">2019 — 2021</div>
-        <div class="tl-content">
-          <div class="tl-role">Zonal CART Clinician <span class="role-tag clinical">Programme</span></div>
-          <div class="tl-org">Heartland Alliance LTD/GTE · Lagos</div>
-          <ul class="tl-points">
-            <li>Designed <strong>innovative operational strategies</strong> that improved ART Retention and eHR adoption across two zones.</li>
-            <li>Developed <strong>SOPs and clinical guidelines</strong> aligned with national and international best practices.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="tl-date">2018 — 2019</div>
-        <div class="tl-content">
-          <div class="tl-role">Resident Medical Officer <span class="role-tag clinical">Clinical</span></div>
-          <div class="tl-org">St. Peter's Catholic Church Hospital · Abaji, FCT</div>
-          <ul class="tl-points">
-            <li>Performed <strong>1,500+ hours</strong> of clinical ultrasound and surgical procedures in resource-limited environments.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="tl-date">2016 — 2017</div>
-        <div class="tl-content">
-          <div class="tl-role">Chief Medical House-Officer <span class="role-tag leadership">Leadership</span></div>
-          <div class="tl-org">Kubwa General Hospital · Abuja</div>
-          <ul class="tl-points">
-            <li>Coordinated hospital-wide doctor rosters, CME planning, and cross-functional team coordination at scale.</li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects">
-    <div class="section-header reveal">
-      <div class="section-label">Selected Work</div>
-      <h2 class="section-title">Case Studies: Insight to <span class="accent">Outcome</span></h2>
-    </div>
-    <div class="projects-grid">
-
-      <div class="project-card reveal">
-        <div class="project-header">
-          <div class="project-icon">📚</div>
-          <a href="#" class="project-link" title="View Project">↗</a>
-        </div>
-        <div>
-          <div class="project-name">MedOpsLov</div>
-          <p class="project-problem"><strong>Problem:</strong> Medical professionals lack structured systems for intensive study and certification preparation.</p>
-        </div>
-        <div class="project-features">
-          <div class="feature-row">Structured study modules with adaptive flow</div>
-          <div class="feature-row">Real-time progress tracking dashboard</div>
-          <div class="feature-row">Optimized reading & retention workflows</div>
-        </div>
-        <div class="project-metrics">
-          <div class="metric-box">
-            <div class="metric-val">60%+</div>
-            <div class="metric-label">Weekly Retention</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-val">70%+</div>
-            <div class="metric-label">Completion Rate</div>
-          </div>
-        </div>
-        <div class="project-tags">
-          <span class="tag">HealthTech</span>
-          <span class="tag">Product Strategy</span>
-          <span class="tag">MVP</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-header">
-          <div class="project-icon">⚙️</div>
-          <a href="#" class="project-link" title="View Project">↗</a>
-        </div>
-        <div>
-          <div class="project-name">MedOps Command</div>
-          <p class="project-problem"><strong>Problem:</strong> No centralized system exists for managing medical operations and workflow execution in clinical environments.</p>
-        </div>
-        <div class="project-features">
-          <div class="feature-row">Centralized operational workflow management</div>
-          <div class="feature-row">Structured planning & execution system</div>
-          <div class="feature-row">Built from 10 years of clinical operational insight</div>
-        </div>
-        <div class="project-metrics">
-          <div class="metric-box">
-            <div class="metric-val">65%+</div>
-            <div class="metric-label">Engagement Rate</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-val">75%+</div>
-            <div class="metric-label">Task Completion</div>
-          </div>
-        </div>
-        <div class="project-tags">
-          <span class="tag">Digital Health</span>
-          <span class="tag">Operations</span>
-          <span class="tag">Systems Design</span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- CERTIFICATIONS -->
-  <section id="certifications">
-    <div class="section-header reveal">
-      <div class="section-label">Credentials</div>
-      <h2 class="section-title">Certifications & <span class="accent">Training</span></h2>
-    </div>
-    <div class="certs-grid reveal">
-
-      <div class="cert-card">
-        <div class="cert-badge">🏆</div>
-        <div class="cert-issuer">IIPM · Abuja</div>
-        <div class="cert-name">Certified Lead Project Management Professional</div>
-        <div class="cert-year">August 2021 · 35 PDUs</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">🎓</div>
-        <div class="cert-issuer">University of Washington</div>
-        <div class="cert-name">Leadership & Management in Health</div>
-        <div class="cert-year">June 2021 · 7.5 CEUs</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">🎓</div>
-        <div class="cert-issuer">University of Washington</div>
-        <div class="cert-name">Project Management in Global Health</div>
-        <div class="cert-year">September 2021 · 7.5 CEUs</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">📊</div>
-        <div class="cert-issuer">Oze Business School</div>
-        <div class="cert-name">Business Analytics Fundamentals</div>
-        <div class="cert-year">February 2025</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">❤️</div>
-        <div class="cert-issuer">NHCPS · SaveALife</div>
-        <div class="cert-name">ACLS & PALS Provider Certification</div>
-        <div class="cert-year">Issued January 2024 · Renews January 2026</div>
-        <div class="cert-status valid">✓ Active</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">🌐</div>
-        <div class="cert-issuer">NextGenU · USAID</div>
-        <div class="cert-name">Global Health Informatics</div>
-        <div class="cert-year">December 2021</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">📈</div>
-        <div class="cert-issuer">USAID Global Health</div>
-        <div class="cert-name">M&E Fundamentals & Health Communication</div>
-        <div class="cert-year">2023</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">🎯</div>
-        <div class="cert-issuer">IIPM · Abuja</div>
-        <div class="cert-name">Strategic Planning Workshop</div>
-        <div class="cert-year">January 2022</div>
-      </div>
-
-      <div class="cert-card">
-        <div class="cert-badge">🏥</div>
-        <div class="cert-issuer">MDCN</div>
-        <div class="cert-name">Annual Practicing License</div>
-        <div class="cert-year">Valid through 2026</div>
-        <div class="cert-status valid">✓ Current</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section id="skills">
-    <div class="section-header reveal">
-      <div class="section-label">Expertise</div>
-      <h2 class="section-title">Core <span class="accent">Competencies</span></h2>
-    </div>
-    <div class="skills-section reveal">
-      <div class="skills-categories">
-        <div>
-          <div class="skill-category-title">Product & Strategy</div>
-          <div class="skill-list">
-            <div class="skill-item">Product Strategy & Roadmapping</div>
-            <div class="skill-item">MVP Development & Launch</div>
-            <div class="skill-item">User Research & Needs Analysis</div>
-            <div class="skill-item">Agile & Scrum Methodology</div>
-          </div>
-        </div>
-        <div>
-          <div class="skill-category-title">Health Systems</div>
-          <div class="skill-list">
-            <div class="skill-item">Health Systems Design</div>
-            <div class="skill-item">Clinical Workflow Analysis</div>
-            <div class="skill-item">Global Health Programming</div>
-            <div class="skill-item">Health Policy & Advocacy</div>
-          </div>
-        </div>
-        <div>
-          <div class="skill-category-title">Data & Execution</div>
-          <div class="skill-list">
-            <div class="skill-item">Project Management (CLPMP)</div>
-            <div class="skill-item">Data Analysis & Visualization</div>
-            <div class="skill-item">Monitoring & Evaluation</div>
-            <div class="skill-item">Stakeholder Management</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="section-header reveal">
-      <div class="section-label">Connect</div>
-      <h2 class="section-title">Let's Build <span class="accent">Better Health Products</span></h2>
-    </div>
-    <div class="contact-wrapper reveal">
-      <div>
-        <h3 class="contact-headline">Open to <span class="accent">Opportunities</span></h3>
-        <p class="contact-sub">Whether you're building health infrastructure, looking for a clinical product perspective, or exploring digital health initiatives — I'd love to connect and discuss how we can create meaningful impact together.</p>
-        <div class="contact-links">
-          <a href="mailto:osakweonyemaanthony@gmail.com" class="contact-link">
-            <span>✉️</span> osakweonyemaanthony@gmail.com
-          </a>
-          <a href="https://www.linkedin.com/in/drosakweanthony" target="_blank" class="contact-link">
-            <span>💼</span> linkedin.com/in/drosakweanthony
-          </a>
-          <a href="#" class="contact-link">
-            <span>📍</span> Abuja, Nigeria
-          </a>
-        </div>
-      </div>
-      <form class="contact-form" id="contact-form" onsubmit="return handleContactSubmit(event)">
-        <div class="form-group">
-          <label class="form-label" for="cf-name">Your Name</label>
-          <input class="form-input" type="text" id="cf-name" name="name" placeholder="e.g., Dr. Jane Smith" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="cf-email">Email Address</label>
-          <input class="form-input" type="email" id="cf-email" name="email" placeholder="you@company.com" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="cf-message">Message</label>
-          <textarea class="form-textarea" id="cf-message" name="message" placeholder="Tell me about the opportunity..." required></textarea>
-        </div>
-        <button type="submit" class="form-submit">Send Message →</button>
-        <div class="form-success" id="form-success">✓ Message sent successfully. I'll be in touch soon!</div>
-      </form>
-    </div>
-  </section>
+  </div>
 
   <!-- FOOTER -->
   <footer>
@@ -1517,10 +1579,35 @@
 </div>
 
 <script>
-  // Reveal animations on scroll
-  const reveals = document.querySelectorAll('.reveal');
+  // Tab switching functionality
+  function showTab(tabName) {
+    // Hide all tabs
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
 
-  function reveal() {
+    // Remove active class from all buttons
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    // Show selected tab
+    const selectedTab = document.getElementById(tabName);
+    if (selectedTab) {
+      selectedTab.classList.add('active');
+    }
+
+    // Set active button
+    event.target.classList.add('active');
+
+    // Trigger reveal animations
+    setTimeout(() => {
+      revealElements();
+    }, 100);
+  }
+
+  // Reveal animations on scroll
+  function revealElements() {
+    const reveals = document.querySelectorAll('.reveal');
+
     reveals.forEach((element) => {
       const windowHeight = window.innerHeight;
       const elementTop = element.getBoundingClientRect().top;
@@ -1532,8 +1619,8 @@
     });
   }
 
-  window.addEventListener('scroll', reveal);
-  reveal();
+  window.addEventListener('scroll', revealElements);
+  revealElements();
 
   // Contact form handler
   function handleContactSubmit(event) {
@@ -1541,18 +1628,15 @@
     const form = document.getElementById('contact-form');
     const successMsg = document.getElementById('form-success');
 
-    // Here you would typically send the form data to your backend
     console.log('Form submitted:', {
       name: document.getElementById('cf-name').value,
       email: document.getElementById('cf-email').value,
       message: document.getElementById('cf-message').value,
     });
 
-    // Show success message
     successMsg.classList.add('show');
     form.reset();
 
-    // Hide success message after 5 seconds
     setTimeout(() => {
       successMsg.classList.remove('show');
     }, 5000);
